@@ -1,3 +1,8 @@
+=(Sorcerer_Senhor notes)=-
+
+Tested: Working Video 720p, 1080p & Sound
+
+___
 # Exidy Sorcerer core for MiSTer
 
 This is the MiSTer core of the Exidy Sorcerer computer.
@@ -8,4 +13,5 @@ This is the MiSTer core of the Exidy Sorcerer computer.
 You might need to load BASIC using the BIN OSD option.
 
 UART should be wired correctly, so you should be able to load tapes using that. Untested.
+
 
