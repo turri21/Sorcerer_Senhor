@@ -208,20 +208,15 @@ assign VIDEO_ARY = (!ar) ? 12'd3 : 12'd0;
 `include "build_id.v" 
 localparam CONF_STR = {
 	"Sorcerer;;",
+   "F1,ROM,Load PAC;",
+	"F2,TAP,Load Tape;",
+	"F3,BIN;",
 	"-;",
 	"O[122:121],Aspect ratio,Original,Full Screen,[ARC1],[ARC2];",
 	"O[2],TV Mode,NTSC,PAL;",
-	"O[4:3],Noise,White,Red,Green,Blue;",
-	"-;",
-	"F1,BIN;",
-	"-;",
-	"P2,Test Page 2;",
-	"P2-;",
-	"P2-, -= Options in page 2 =-;",
-	"P2-;",
-	"P2S0,DSK;",
-	"P2O[7:6],Option 2,1,2,3,4;",
-	"-;",
+	"O[7],Display timings,Original,Normalized;",
+	"O[9:8],RAM,8k,16k,32k;",
+	"O[10],CPU Speed,2 MHz,4 MHz;",
 	"-;",
 	"T[0],Reset;",
 	"R[0],Reset and close OSD;",
@@ -231,6 +226,10 @@ localparam CONF_STR = {
 	"V,v",`BUILD_DATE 
 };
 
+wire pal = status[2];
+wire timings = status[7];
+wire  [1:0] ramsz = status[9:8];
+wire turbo = status[10];
 
 wire ioctl_download;
 wire [15:0] ioctl_addr;
@@ -375,9 +374,9 @@ sorcerer sorcerer (
 	.CASS_IN(cass_in[1]),
 	.CASS_OUT(cass_out),
 	.CASS_CTRL(cass_motor),
-	.PAL(1'b1),
-	.ALTTIMINGS(1'b1),
-	.TURBO(1'b1),
+	.PAL(pal),
+	.ALTTIMINGS(timings),
+	.TURBO(turbo),
 
 	.KEY_STROBE(key_strobe),
 	.KEY_PRESSED(key_pressed),
@@ -385,7 +384,7 @@ sorcerer sorcerer (
 	.KEY_CODE(key_code),
 	.UPCASE(upcase),
 
-	.RAM_SIZE(2),
+	.RAM_SIZE(ramsz),
 	.RAM_ADDR(ram_addr),
 	.RAM_RD(ram_rd),
 	.RAM_WR(ram_wr),
@@ -436,9 +435,9 @@ assign VGA_DE = ~(HBlank | VBlank);
 assign VGA_HS = HSync;
 assign VGA_VS = VSync;
 
-assign VGA_R = video ? 6'h3F : 6'h00;
-assign VGA_G = video ? 6'h3F : 6'h00;
-assign VGA_B = video ? 6'h3F : 6'h00;
+assign VGA_R = video ? 8'hFF : 8'h00;
+assign VGA_G = video ? 8'hFF : 8'h00;
+assign VGA_B = video ? 8'hFF : 8'h00;
 
 /*
 arcade_video #(256,24) arcade_video
